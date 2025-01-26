@@ -1,15 +1,17 @@
 using System;
 using UnityEngine;
 
-public class RoperCreator : MonoBehaviour
+public class RopeCreator : MonoBehaviour
 {
-    [SerializeField, Range(2, 50)] private int segmentCount = 2;
+    [SerializeField, Range(2, 50)] private int segmentCount = 12;
     public Transform start;
     public Transform end;
     public HingeJoint2D hingePrefab;
     
     [SerializeField] private Rigidbody2D[] _rigidbodies;
     [HideInInspector] public Transform[] segments;
+    
+    public bool ropeCreated = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

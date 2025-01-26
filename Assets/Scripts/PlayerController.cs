@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -6,21 +6,31 @@ public class PlayerContoller : MonoBehaviour
 {
     [SerializeField] private float _maxSpeed = 4.0f;
 
-    [SerializeField] private float _jumpForce = 5.0f;
-    [SerializeField] private float _friction = 0.9f;
+    [SerializeField] private float jumpForce = 5.0f;
+    [SerializeField] private float friction = 0.9f;
     public ItemInHands itemInHands = ItemInHands.None; 
     private Vector3 _velocity;
     
-    [SerializeField] private GameObject powerPole;
-    [SerializeField] private GameObject powerLine;
+    [SerializeField] private GameObject powerPoleSprite;
+    [SerializeField] private GameObject powerLineSprite;
     [SerializeField] private BoxCollider2D placementBox;
-    
+    [SerializeField] private GameObject powerPolePrefab;
+    [SerializeField] private BoxCollider2D playerHitBox; 
+
+    public List<GameObject> powerPoleInstances = new();
+    public List<GameObject> powerLineInstances = new();
     private Rigidbody2D _rigidbody;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private LineRenderer _lineRenderer;
+    private Vector2 _start;
+    public bool connectionActive = false;
+    private RopeLine[] _ropeLines;
+    
+    
     void Start()
     {
+        _lineRenderer = GetComponent<LineRenderer>();
+        _lineRenderer.enabled = false;
         _rigidbody = GetComponent<Rigidbody2D>();
-        
     }
 
     // Update is called once per frame
@@ -35,33 +45,78 @@ public class PlayerContoller : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             itemInHands = ItemInHands.PowerPole;
-            powerPole.GetComponent<SpriteRenderer>().enabled = true;
-            powerLine.GetComponent<SpriteRenderer>().enabled = false;
+            powerPoleSprite.GetComponent<SpriteRenderer>().enabled = true;
+            powerLineSprite.GetComponent<SpriteRenderer>().enabled = false;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             itemInHands = ItemInHands.PowerLine;
-            powerPole.GetComponent<SpriteRenderer>().enabled = false;
-            powerLine.GetComponent<SpriteRenderer>().enabled = true;
+            powerPoleSprite.GetComponent<SpriteRenderer>().enabled = false;
+            powerLineSprite.GetComponent<SpriteRenderer>().enabled = true;
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
             itemInHands = ItemInHands.None;
-            powerPole.GetComponent<SpriteRenderer>().enabled = false;
-            powerLine.GetComponent<SpriteRenderer>().enabled = false;
+            powerPoleSprite.GetComponent<SpriteRenderer>().enabled = false;
+            powerLineSprite.GetComponent<SpriteRenderer>().enabled = false;
+            connectionActive = false;
+            BreakConnection();
         }
         if(Input.GetKeyDown(KeyCode.C))
         {
             if (itemInHands == ItemInHands.PowerPole)
             {
-                var powerPoleInstance = Instantiate(powerPole, transform.position, Quaternion.identity);
-                
-            }
-            if (itemInHands == ItemInHands.PowerLine)
-            {
-                var powerLineInstance = Instantiate(powerLine, transform.position, Quaternion.identity); ;
+                if (placementBox.IsTouchingLayers(LayerMask.GetMask("Ground")))
+                {
+                    var powerPoleInstance = Instantiate(powerPolePrefab, transform.position + new Vector3(0,0.4f,0), Quaternion.identity);
+                    powerPoleInstance.GetComponent<SpriteRenderer>().enabled = true;
+                    powerPoleInstance.transform.localScale = new Vector3(3f, 3f, 0f);
+                    powerPoleInstances.Add(powerPoleInstance);
+                }
+                else
+                {
+                    Debug.Log("Cannot place power pole here");
+                }
             }
         }
+        if (itemInHands == ItemInHands.PowerLine && playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerStart")) && !connectionActive)
+        {
+            connectionActive = true;
+            //TODO get the center of the connection...
+            _start = playerHitBox.ClosestPoint(transform.position);
+            _lineRenderer.enabled = true;
+        }
+
+        if (connectionActive)
+        {
+            DrawTempConnection();
+            if(playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerEnd")))
+            {
+                CreatePermanentConnection();
+            }
+        }
+    }
+
+    private void CreatePermanentConnection()
+    {
+        connectionActive = false;
+        _lineRenderer.enabled = false;
+        var ropeCreator = new RopeCreator();
+        ropeCreator.end = transform;
+        ropeCreator.start = new Transform(new Vector3(_start.x, _start.y, 0), Quaternion.identity, new Vector3(1, 1, 1));
+    }
+
+    private void DrawTempConnection()
+     {
+        _lineRenderer.enabled = true;
+        _lineRenderer.SetPosition(0, _start);
+        _lineRenderer.SetPosition(1, transform.position);
+    }
+
+    private void BreakConnection()
+    {
+        connectionActive = false;
+        _lineRenderer.enabled = false;
     }
     
     private void UpdateMovement()
@@ -74,9 +129,9 @@ public class PlayerContoller : MonoBehaviour
         transform.position += _velocity * Time.deltaTime;
         if (Input.GetKeyDown(KeyCode.Space) && Mathf.Abs(_rigidbody.linearVelocity.y) < 0.001f)
         {
-            _rigidbody.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
+            _rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
-        _velocity *= _friction;
+        _velocity *= friction;
         
         if (_velocity.x > 0.1f)
         {

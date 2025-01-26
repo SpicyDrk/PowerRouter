@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b382451d2ce0d7a478b19034e51d493d
+guid: fbb502cba4e9b714584884ad70335ae1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5474660635284629554
-    second: PowerPole_0
+      213: -2854771751416017430
+    second: PowerPole 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PowerPole_0
+      name: PowerPole 1_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 2
-        width: 18
-        height: 24
+        x: 15
+        y: 1
+        width: 34
+        height: 50
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ec79b0088291604b0800000000000000
-      internalID: -5474660635284629554
+      spriteID: aed4702a730d168d0800000000000000
+      internalID: -2854771751416017430
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      PowerPole_0: -5474660635284629554
+      PowerPole 1_0: -2854771751416017430
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

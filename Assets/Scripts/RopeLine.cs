@@ -2,38 +2,33 @@ using UnityEngine;
 
 public class RopeLine : MonoBehaviour
 {
-    
-    RoperCreator ropeCreator;
-    LineRenderer lineRenderer;
-    
-    [SerializeField] Material ropeMaterial;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private RopeCreator _ropeCreator;
+    private LineRenderer _lineRenderer;
     void Start()
     {
-        ropeCreator = GetComponent<RoperCreator>();
-        lineRenderer = GetComponent<LineRenderer>();
+        _ropeCreator = GetComponent<RopeCreator>();
+        _lineRenderer = GetComponent<LineRenderer>();
         
-        lineRenderer.enabled = true;
-        lineRenderer.positionCount = ropeCreator.segments.Length;
+        _lineRenderer.enabled = true;
+        _lineRenderer.positionCount = _ropeCreator.segments.Length;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        if(ropeCreator.end == null)
+        if(_ropeCreator.end == null)
         {
             return;
         }
-        if(lineRenderer.positionCount != ropeCreator.segments.Length)
+        if(_lineRenderer.positionCount != _ropeCreator.segments.Length)
         {
-            lineRenderer.positionCount = ropeCreator.segments.Length;
+            _lineRenderer.positionCount = _ropeCreator.segments.Length;
         }
-        for(int i=0; i<ropeCreator.segments.Length; i++)
+        for(int i=0; i<_ropeCreator.segments.Length; i++)
         {
-            lineRenderer.SetPosition(i, ropeCreator.segments[i].position);
+            _lineRenderer.SetPosition(i, _ropeCreator.segments[i].position);
         }
 
-        lineRenderer.positionCount++;
-        lineRenderer.SetPosition(lineRenderer.positionCount-1, ropeCreator.end.position);
+        _lineRenderer.positionCount++;
+        _lineRenderer.SetPosition(_lineRenderer.positionCount-1, _ropeCreator.end.position);
     }
 }
