@@ -17,16 +17,16 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField] private GameObject powerPolePrefab;
     [SerializeField] private BoxCollider2D playerHitBox; 
     [SerializeField] private GameObject powerLinePrefab;
-    [SerializeField] private GameObject powerStart;
-    [SerializeField] private GameObject powerEnd;
     
     private Rigidbody2D _rigidbody;
     private LineRenderer _lineRenderer;
     private Vector2 _connectionStart;
-    public bool connectionActive = false;
+    private bool _connectionActive = false;
     private RopeLine[] _ropeLines;
     public GameObject gamePlay;
     private GamePlay _gamePlay;
+    
+    public GameObject _powerPoleIn;
     
     float timeSinceLastConnection = 0;
     
@@ -34,7 +34,6 @@ public class PlayerContoller : MonoBehaviour
     void Start()
     {
         _gamePlay = gamePlay.GetComponent<GamePlay>();
-        _gamePlay.powerLineInstances.Add(powerStart);
         _lineRenderer = GetComponent<LineRenderer>();
         _lineRenderer.enabled = false;
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -66,7 +65,7 @@ public class PlayerContoller : MonoBehaviour
             itemInHands = ItemInHands.None;
             powerPoleSprite.GetComponent<SpriteRenderer>().enabled = false;
             powerLineSprite.GetComponent<SpriteRenderer>().enabled = false;
-            connectionActive = false;
+            _connectionActive = false;
             BreakConnection();
         }
         if(Input.GetKeyDown(KeyCode.C))
@@ -78,36 +77,36 @@ public class PlayerContoller : MonoBehaviour
                     var powerPoleInstance = Instantiate(powerPolePrefab, transform.position + new Vector3(0,0.4f,0), Quaternion.identity);
                     powerPoleInstance.GetComponent<SpriteRenderer>().enabled = true;
                     powerPoleInstance.transform.localScale = new Vector3(3f, 3f, 0f);
-                    _gamePlay.powerLineInstances.Add(powerPoleInstance);
-                }
-                else
-                {
-                    Debug.Log("Cannot place power pole here");
+                    _gamePlay.powerPoleInstances.Add(powerPoleInstance);
                 }
             }
         }
-        if (itemInHands == ItemInHands.PowerLine && playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerStart")) && !connectionActive)
+        if (itemInHands == ItemInHands.PowerLine && 
+            playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerStart")) &&
+            !_connectionActive)
         {
-            connectionActive = true;
-            
-            foreach (var powerStart in _gamePlay.powerPoleInstances)
+            _connectionActive = true;
+            foreach (var start in _gamePlay.powerPoleInstances)
             {
-                if (Vector2.Distance(powerStart.transform.position, transform.position) < 1.0f)
+                PowerPole powerPoleIn = start.GetComponent<PowerPole>();
+                if (Vector2.Distance(powerPoleIn.powerOutTransform, transform.position) < 1.0f && powerPoleIn.powerLineOut == null)
                 {
-                    _connectionStart = powerStart.transform.position;
+                    _powerPoleIn = powerPoleIn.gameObject;
+                    
+                    _connectionStart = powerPoleIn.powerOutTransform;
                     _lineRenderer.enabled = true;
                     break;
                 }
             }
         }
 
-        if (connectionActive)
+        if (_connectionActive)
         {
             DrawTempConnection();
-            if(playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerEnd")) && timeSinceLastConnection > 1.0f)
+            if(playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerEnd")) && timeSinceLastConnection > 1.0f && _powerPoleIn != null)
             {
                 timeSinceLastConnection = 0;
-                CreatePermanentConnection();
+                CreatePermanentConnection(_powerPoleIn);
             }
             else
             {
@@ -116,27 +115,37 @@ public class PlayerContoller : MonoBehaviour
         }
     }
 
-    private void CreatePermanentConnection()
+    private void CreatePermanentConnection(GameObject powerPoleIn)
     {
-        connectionActive = false;
-        _lineRenderer.enabled = false;
-        //find the closest gameObject on layer PowerIn
-        //foreach (var powerStart in _gamePlay.powerPoleInstances)
-        //{
-        //    if (Vector2.Distance(powerStart.transform.position, transform.position) < 1.0f)
-        //    {
-        //        _connectionStart = powerStart.transform.position;
-        //        _lineRenderer.enabled = true;
-        //        break;
-        //    }
-        //}
-        
-        var powerLineInstance = Instantiate(powerLinePrefab, _connectionStart, Quaternion.identity);
-        powerLineInstance.GetComponent<RopeCreator>().start = _connectionStart;
-        powerLineInstance.GetComponent<RopeCreator>().end = playerHitBox.ClosestPoint(transform.position);
-        powerLineInstance.GetComponent<RopeCreator>().GenerateRope();
-        powerLineInstance.GetComponent<LineRenderer>().enabled = true;
-        _gamePlay.powerLineInstances.Add(powerLineInstance);
+
+        foreach (var powerStart in _gamePlay.powerPoleInstances)
+        {
+            PowerPole powerPole = powerStart.GetComponent<PowerPole>();
+            if (Vector2.Distance(powerPole.powerInTransform, transform.position) < 1.0f && powerPole.powerLineIn == null)
+            {
+                var powerLineInstance = Instantiate(powerLinePrefab, _connectionStart, Quaternion.identity);
+                var ropeCreator = powerLineInstance.GetComponent<RopeCreator>();
+                ropeCreator.start = _connectionStart;
+                ropeCreator.end = powerPole.powerInTransform;
+                ropeCreator.GenerateRope();
+                ropeCreator.powerPoleOut = powerPoleIn;
+                ropeCreator.powerPoleIn = powerPole.gameObject;
+                powerPole.powerLineIn = powerLineInstance;
+                powerPoleIn.gameObject.GetComponent<PowerPole>().powerLineOut = powerLineInstance;
+                _gamePlay.CalculatePower();
+                
+                powerLineInstance.GetComponent<LineRenderer>().enabled = true;
+                _gamePlay.powerLineInstances.Add(powerLineInstance);
+                _connectionActive = false;
+                _lineRenderer.enabled = false;
+                _gamePlay.CalculatePower();
+                break;
+            }
+        }
+        if(_connectionActive)
+        {
+            BreakConnection();
+        }
     }
 
     private void DrawTempConnection()
@@ -148,7 +157,7 @@ public class PlayerContoller : MonoBehaviour
 
     private void BreakConnection()
     {
-        connectionActive = false;
+        _connectionActive = false;
         _lineRenderer.enabled = false;
     }
     

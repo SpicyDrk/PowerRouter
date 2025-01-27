@@ -37,6 +37,12 @@ public class PowerPole : MonoBehaviour
         {
             hasPower = true;
             var collider = gameObject.GetComponent<BoxCollider2D>();
+            powerOutTransform = transform.position + new Vector3(collider.offset.x, collider.offset.y, 0);
+        }
+        if (isEnd)
+        {
+            hasPower = false;
+            var collider = gameObject.GetComponent<BoxCollider2D>();
             powerInTransform = transform.position + new Vector3(collider.offset.x, collider.offset.y, 0);
         }
     }

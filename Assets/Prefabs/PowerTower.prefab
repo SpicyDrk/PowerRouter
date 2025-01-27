@@ -205,10 +205,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasPower: 0
-  powerInTransform: {x: 0, y: 0, z: 0}
-  powerOutTransform: {x: 0, y: 0, z: 0}
+  powerInTransform: {x: 0, y: 0}
+  powerOutTransform: {x: 0, y: 0}
   isStart: 0
   isEnd: 0
+  powerLineIn: {fileID: 0}
+  powerLineOut: {fileID: 0}
 --- !u!212 &2286312242941094039
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -304,8 +306,8 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0.56
-  m_PointLightOuterRadius: 2.94
+  m_PointLightInnerRadius: 4.09
+  m_PointLightOuterRadius: 5.17
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1

@@ -9,12 +9,14 @@ public class RopeCreator : MonoBehaviour
     public HingeJoint2D hingePrefab;
     
     [HideInInspector] public Transform[] segments;
-    
+
+    public bool hasPower = false;
+    public GameObject powerPoleIn;
+    public GameObject powerPoleOut;
     public bool ropeCreated = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //GenerateRope();
     }
 
     // Update is called once per frame

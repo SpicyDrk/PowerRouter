@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 549575493079756062}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.094, y: 0.212, z: 0}
+  m_LocalPosition: {x: 0.13000001, y: 0.212, z: -0.24}
   m_LocalScale: {x: 0.09406375, y: 0.09876694, z: 1.50502}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -450,9 +450,9 @@ MonoBehaviour:
   powerPolePrefab: {fileID: 4857093557575073881, guid: 1b8d48d5d2651f3479c2eaccb2a68d86, type: 3}
   playerHitBox: {fileID: 4547112114683427560}
   powerLinePrefab: {fileID: 7289863754125797469, guid: 5f5f2263b3edf8545b7e7f5722fed5de, type: 3}
-  powerPoleInstances: []
-  powerLineInstances: []
-  connectionActive: 0
+  powerStart: {fileID: 0}
+  powerEnd: {fileID: 0}
+  gamePlay: {fileID: 0}
 --- !u!61 &3243004221627484733
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -719,7 +719,7 @@ Transform:
   m_GameObject: {fileID: 8804208526462590001}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.251, y: 0.212, z: 0}
+  m_LocalPosition: {x: 0.287, y: 0.212, z: -0.24}
   m_LocalScale: {x: 0.09406375, y: 0.09876694, z: 1.50502}
   m_ConstrainProportionsScale: 0
   m_Children: []
