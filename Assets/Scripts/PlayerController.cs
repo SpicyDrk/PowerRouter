@@ -85,12 +85,14 @@ public class PlayerContoller : MonoBehaviour
             playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerStart")) &&
             !_connectionActive)
         {
-            _connectionActive = true;
+            
             foreach (var start in _gamePlay.powerPoleInstances)
             {
                 PowerPole powerPoleIn = start.GetComponent<PowerPole>();
+
                 if (Vector2.Distance(powerPoleIn.powerOutTransform, transform.position) < 1.0f && powerPoleIn.powerLineOut == null)
                 {
+                    _connectionActive = true;
                     _powerPoleIn = powerPoleIn.gameObject;
                     
                     _connectionStart = powerPoleIn.powerOutTransform;

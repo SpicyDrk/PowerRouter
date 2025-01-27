@@ -16,10 +16,15 @@ public class PowerPole : MonoBehaviour
     public GameObject powerLineIn;
     public GameObject powerLineOut;
 
+    [SerializeField] private Sprite powerOffSprite;
+    [SerializeField] private Sprite powerOnSprite;
+
+    private SpriteRenderer _spriteRenderer;
     private Light2D _light2D;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _light2D = GetComponent<Light2D>();
         var children = gameObject.GetComponentsInChildren<Transform>();
         foreach (var child in children)
@@ -55,5 +60,9 @@ public class PowerPole : MonoBehaviour
             
         }
         _light2D.enabled = hasPower;
+        if(!isStart && !isEnd)
+        {
+            _spriteRenderer.sprite = hasPower ? powerOnSprite : powerOffSprite;
+        }
     }
 }
