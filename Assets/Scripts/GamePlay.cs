@@ -27,6 +27,16 @@ public class GamePlay : MonoBehaviour
     // ReSharper disable Unity.PerformanceAnalysis
     public void CalculatePower()
     {
+        foreach (var powerPoleGo in powerPoleInstances)
+        {
+            powerPoleGo.GetComponent<PowerPole>().hasPower = false;
+        }
+
+        foreach (var powerLineGo in powerLineInstances)
+        {
+            powerLineGo.GetComponent<RopeCreator>().hasPower = false;
+        }
+        powerStart.GetComponent<PowerPole>().hasPower = true;
         var currentPowerPole = powerStart;
         var currentPowerLine = powerStart.GetComponent<PowerPole>()?.powerLineOut;
         var parsingPowerPole = true; 
