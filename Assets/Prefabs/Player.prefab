@@ -273,8 +273,6 @@ GameObject:
   - component: {fileID: 71525001591496569}
   - component: {fileID: 3243004221627484733}
   - component: {fileID: 9031982925561914518}
-  - component: {fileID: 7352657522489765452}
-  - component: {fileID: 8373708019021418666}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -383,7 +381,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &4547112114683427560
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -451,6 +449,7 @@ MonoBehaviour:
   placementBox: {fileID: 3243004221627484733}
   powerPolePrefab: {fileID: 4857093557575073881, guid: 1b8d48d5d2651f3479c2eaccb2a68d86, type: 3}
   playerHitBox: {fileID: 4547112114683427560}
+  powerLinePrefab: {fileID: 7289863754125797469, guid: 5f5f2263b3edf8545b7e7f5722fed5de, type: 3}
   powerPoleInstances: []
   powerLineInstances: []
   connectionActive: 0
@@ -607,38 +606,6 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &7352657522489765452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4745876745904931088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 871e3ff698c0a69458393dd1dedab011, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  segmentCount: 9
-  start: {fileID: 0}
-  end: {fileID: 0}
-  hingePrefab: {fileID: 0}
-  _rigidbodies: []
-  segments: []
-  ropeCreated: 0
---- !u!114 &8373708019021418666
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4745876745904931088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 363c220d96a0f96478a4ef6afe834971, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ropeMaterial: {fileID: 2100000, guid: c94beb88c16aa974e9f63b989efe7fb7, type: 2}
 --- !u!1 &5312610863940886146
 GameObject:
   m_ObjectHideFlags: 0

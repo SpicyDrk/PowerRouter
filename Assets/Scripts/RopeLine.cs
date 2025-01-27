@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class RopeLine : MonoBehaviour
 {
     private RopeCreator _ropeCreator;
     private LineRenderer _lineRenderer;
+    
     void Start()
     {
         _ropeCreator = GetComponent<RopeCreator>();
@@ -29,6 +31,6 @@ public class RopeLine : MonoBehaviour
         }
 
         _lineRenderer.positionCount++;
-        _lineRenderer.SetPosition(_lineRenderer.positionCount-1, _ropeCreator.end.position);
+        _lineRenderer.SetPosition(_lineRenderer.positionCount-1, _ropeCreator.end);
     }
 }

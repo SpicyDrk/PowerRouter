@@ -16,18 +16,25 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField] private BoxCollider2D placementBox;
     [SerializeField] private GameObject powerPolePrefab;
     [SerializeField] private BoxCollider2D playerHitBox; 
-
-    public List<GameObject> powerPoleInstances = new();
-    public List<GameObject> powerLineInstances = new();
+    [SerializeField] private GameObject powerLinePrefab;
+    [SerializeField] private GameObject powerStart;
+    [SerializeField] private GameObject powerEnd;
+    
     private Rigidbody2D _rigidbody;
     private LineRenderer _lineRenderer;
-    private Vector2 _start;
+    private Vector2 _connectionStart;
     public bool connectionActive = false;
     private RopeLine[] _ropeLines;
+    public GameObject gamePlay;
+    private GamePlay _gamePlay;
+    
+    float timeSinceLastConnection = 0;
     
     
     void Start()
     {
+        _gamePlay = gamePlay.GetComponent<GamePlay>();
+        _gamePlay.powerLineInstances.Add(powerStart);
         _lineRenderer = GetComponent<LineRenderer>();
         _lineRenderer.enabled = false;
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -71,7 +78,7 @@ public class PlayerContoller : MonoBehaviour
                     var powerPoleInstance = Instantiate(powerPolePrefab, transform.position + new Vector3(0,0.4f,0), Quaternion.identity);
                     powerPoleInstance.GetComponent<SpriteRenderer>().enabled = true;
                     powerPoleInstance.transform.localScale = new Vector3(3f, 3f, 0f);
-                    powerPoleInstances.Add(powerPoleInstance);
+                    _gamePlay.powerLineInstances.Add(powerPoleInstance);
                 }
                 else
                 {
@@ -82,17 +89,29 @@ public class PlayerContoller : MonoBehaviour
         if (itemInHands == ItemInHands.PowerLine && playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerStart")) && !connectionActive)
         {
             connectionActive = true;
-            //TODO get the center of the connection...
-            _start = playerHitBox.ClosestPoint(transform.position);
-            _lineRenderer.enabled = true;
+            
+            foreach (var powerStart in _gamePlay.powerPoleInstances)
+            {
+                if (Vector2.Distance(powerStart.transform.position, transform.position) < 1.0f)
+                {
+                    _connectionStart = powerStart.transform.position;
+                    _lineRenderer.enabled = true;
+                    break;
+                }
+            }
         }
 
         if (connectionActive)
         {
             DrawTempConnection();
-            if(playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerEnd")))
+            if(playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerEnd")) && timeSinceLastConnection > 1.0f)
             {
+                timeSinceLastConnection = 0;
                 CreatePermanentConnection();
+            }
+            else
+            {
+                timeSinceLastConnection += Time.deltaTime;
             }
         }
     }
@@ -101,15 +120,29 @@ public class PlayerContoller : MonoBehaviour
     {
         connectionActive = false;
         _lineRenderer.enabled = false;
-        var ropeCreator = new RopeCreator();
-        ropeCreator.end = transform;
-        ropeCreator.start = new Transform(new Vector3(_start.x, _start.y, 0), Quaternion.identity, new Vector3(1, 1, 1));
+        //find the closest gameObject on layer PowerIn
+        //foreach (var powerStart in _gamePlay.powerPoleInstances)
+        //{
+        //    if (Vector2.Distance(powerStart.transform.position, transform.position) < 1.0f)
+        //    {
+        //        _connectionStart = powerStart.transform.position;
+        //        _lineRenderer.enabled = true;
+        //        break;
+        //    }
+        //}
+        
+        var powerLineInstance = Instantiate(powerLinePrefab, _connectionStart, Quaternion.identity);
+        powerLineInstance.GetComponent<RopeCreator>().start = _connectionStart;
+        powerLineInstance.GetComponent<RopeCreator>().end = playerHitBox.ClosestPoint(transform.position);
+        powerLineInstance.GetComponent<RopeCreator>().GenerateRope();
+        powerLineInstance.GetComponent<LineRenderer>().enabled = true;
+        _gamePlay.powerLineInstances.Add(powerLineInstance);
     }
 
     private void DrawTempConnection()
      {
         _lineRenderer.enabled = true;
-        _lineRenderer.SetPosition(0, _start);
+        _lineRenderer.SetPosition(0, _connectionStart);
         _lineRenderer.SetPosition(1, transform.position);
     }
 
@@ -121,7 +154,6 @@ public class PlayerContoller : MonoBehaviour
     
     private void UpdateMovement()
     {
-        
         var movement = Input.GetAxis("Horizontal");
         Vector3 acceleration = new Vector3(movement*.5f, 0, 0);
         _velocity += acceleration;

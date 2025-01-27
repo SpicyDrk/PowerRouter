@@ -4,18 +4,17 @@ using UnityEngine;
 public class RopeCreator : MonoBehaviour
 {
     [SerializeField, Range(2, 50)] private int segmentCount = 12;
-    public Transform start;
-    public Transform end;
+    public Vector2 start;
+    public Vector2 end;
     public HingeJoint2D hingePrefab;
     
-    [SerializeField] private Rigidbody2D[] _rigidbodies;
     [HideInInspector] public Transform[] segments;
     
     public bool ropeCreated = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GenerateRope();
+        //GenerateRope();
     }
 
     // Update is called once per frame
@@ -27,11 +26,11 @@ public class RopeCreator : MonoBehaviour
     Vector2 GetSegmentPosition(int segmentIndex)
     {
         if(segmentIndex==segments.Length-1)
-            return end.position;
-        return Vector2.Lerp(start.position, end.position, (float)segmentIndex / segmentCount);
+            return end;
+        return Vector2.Lerp(start, end, (float)segmentIndex / segmentCount);
     }
 
-    void GenerateRope()
+    public void GenerateRope()
     {
         if(start == null || end == null)
             return;
