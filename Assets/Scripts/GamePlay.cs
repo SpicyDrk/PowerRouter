@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GamePlay : MonoBehaviour
 {
@@ -9,6 +12,10 @@ public class GamePlay : MonoBehaviour
 
     public GameObject powerStart;
     public GameObject powerEnd;
+    
+    public List<Scene> scenes; 
+    
+    private SoundManager _soundManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -20,6 +27,11 @@ public class GamePlay : MonoBehaviour
         {
             powerPoleInstances.Add(powerStart);
             powerPoleInstances.Add(powerEnd);
+        }
+        _soundManager = SoundManager.instance;
+        if (_soundManager == null)
+        {
+            Debug.LogError("No SoundManager found in scene");
         }
         
     }
@@ -37,6 +49,11 @@ public class GamePlay : MonoBehaviour
             powerLineGo.GetComponent<RopeCreator>().hasPower = false;
         }
         powerStart.GetComponent<PowerPole>().hasPower = true;
+        List<PowerPole> powerPoleHasPower = new();
+        foreach (var pole in powerPoleInstances)
+        {
+            powerPoleHasPower.Add(pole.GetComponent<PowerPole>());
+        }
         var currentPowerPole = powerStart;
         var currentPowerLine = powerStart.GetComponent<PowerPole>()?.powerLineOut;
         var parsingPowerPole = true; 
@@ -74,11 +91,39 @@ public class GamePlay : MonoBehaviour
             }
             parsingPowerPole = !parsingPowerPole;
         }
+
+        if (powerEnd.GetComponent<PowerPole>().hasPower)
+        {
+            LevelComplete();
+        }
     }
     
     public void RemovePowerPoleInstance(GameObject powerPoleInstance)
     {
+        var ppInstance = powerPoleInstance.GetComponent<PowerPole>();
+        if (ppInstance.isStart)
+        {
+            return;
+        }
+        if(ppInstance.powerLineIn != null)
+        {
+            powerLineInstances.Remove(ppInstance.powerLineIn);
+            Destroy(ppInstance.powerLineIn);
+        }
+        if(ppInstance.powerLineOut != null)
+        {
+            powerLineInstances.Remove(ppInstance.powerLineOut);
+            Destroy(ppInstance.powerLineOut);
+        }
         powerPoleInstances.Remove(powerPoleInstance);
+        Destroy(powerPoleInstance);
+        Invoke(nameof(CalculatePower),0.1f);
+    }
+    
+    private void LevelComplete()
+    {
+        _soundManager.PlaySound("Win");
+        
     }
 }
 

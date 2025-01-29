@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -8,15 +9,21 @@ public class PlayerContoller : MonoBehaviour
 
     [SerializeField] private float jumpForce = 5.0f;
     [SerializeField] private float friction = 0.9f;
+    [SerializeField] private float maxConnectionDistance = 6.0f;
     public ItemInHands itemInHands = ItemInHands.None; 
     private Vector3 _velocity;
     
     [SerializeField] private GameObject powerPoleSprite;
     [SerializeField] private GameObject powerLineSprite;
+    [SerializeField] private GameObject deleteSprite;
     [SerializeField] private BoxCollider2D placementBox;
     [SerializeField] private GameObject powerPolePrefab;
     [SerializeField] private BoxCollider2D playerHitBox; 
     [SerializeField] private GameObject powerLinePrefab;
+    [SerializeField] private TMP_Text powerPolesText;
+    
+    [SerializeField] private int maxPowerPoles = 4;
+    private int _powerPoles;
     
     private Rigidbody2D _rigidbody;
     private LineRenderer _lineRenderer;
@@ -27,16 +34,23 @@ public class PlayerContoller : MonoBehaviour
     private GamePlay _gamePlay;
     
     public GameObject _powerPoleIn;
+
+    private float _timeSinceLastConnection = 0;
     
-    float timeSinceLastConnection = 0;
-    
-    
+    private SoundManager _soundManager;
     void Start()
     {
+        _powerPoles = maxPowerPoles;
+        powerPolesText.text = _powerPoles+"/" + maxPowerPoles;
         _gamePlay = gamePlay.GetComponent<GamePlay>();
         _lineRenderer = GetComponent<LineRenderer>();
         _lineRenderer.enabled = false;
         _rigidbody = GetComponent<Rigidbody2D>();
+        _soundManager = SoundManager.instance;
+        if (_soundManager == null)
+        {
+            Debug.LogError("No SoundManager found in scene");
+        }
     }
 
     // Update is called once per frame
@@ -53,32 +67,65 @@ public class PlayerContoller : MonoBehaviour
             itemInHands = ItemInHands.PowerPole;
             powerPoleSprite.GetComponent<SpriteRenderer>().enabled = true;
             powerLineSprite.GetComponent<SpriteRenderer>().enabled = false;
+            deleteSprite.GetComponent<SpriteRenderer>().enabled = false;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             itemInHands = ItemInHands.PowerLine;
             powerPoleSprite.GetComponent<SpriteRenderer>().enabled = false;
             powerLineSprite.GetComponent<SpriteRenderer>().enabled = true;
+            deleteSprite.GetComponent<SpriteRenderer>().enabled = false;
+        }
+        if(Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            itemInHands = ItemInHands.Delete;
+            powerPoleSprite.GetComponent<SpriteRenderer>().enabled = false;
+            powerLineSprite.GetComponent<SpriteRenderer>().enabled = false;
+            deleteSprite.GetComponent<SpriteRenderer>().enabled = true;
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
             itemInHands = ItemInHands.None;
             powerPoleSprite.GetComponent<SpriteRenderer>().enabled = false;
             powerLineSprite.GetComponent<SpriteRenderer>().enabled = false;
+            deleteSprite.GetComponent<SpriteRenderer>().enabled = false;
             _connectionActive = false;
             BreakConnection();
         }
-        if(Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            if (itemInHands == ItemInHands.PowerPole)
+            //restart scene
+        }
+        if(Input.GetKeyDown(KeyCode.E) && itemInHands == ItemInHands.Delete)
+        {
+            foreach (var powerPole in _gamePlay.powerPoleInstances)
             {
-                if (placementBox.IsTouchingLayers(LayerMask.GetMask("Ground")))
+                var pp = powerPole.GetComponent<PowerPole>();
+                if (pp.isStart || pp.isEnd)
                 {
-                    var powerPoleInstance = Instantiate(powerPolePrefab, transform.position + new Vector3(0,0.4f,0), Quaternion.identity);
-                    powerPoleInstance.GetComponent<SpriteRenderer>().enabled = true;
-                    powerPoleInstance.transform.localScale = new Vector3(3f, 3f, 0f);
-                    _gamePlay.powerPoleInstances.Add(powerPoleInstance);
+                    continue;
                 }
+                if(Vector2.Distance(powerPole.transform.position, transform.position) < 1.0f)
+                {
+                    _gamePlay.RemovePowerPoleInstance(powerPole);
+                    _soundManager.PlaySound("Delete");
+                    _powerPoles++;
+                    powerPolesText.text = _powerPoles + "/" + maxPowerPoles;
+                    break;
+                }
+            }
+        }
+        if(Input.GetKeyDown(KeyCode.E) && itemInHands == ItemInHands.PowerPole && _powerPoles > 0)
+        {
+            if (placementBox.IsTouchingLayers(LayerMask.GetMask("Ground")))
+            {
+                var powerPoleInstance = Instantiate(powerPolePrefab, transform.position + new Vector3(0,0.4f,0), Quaternion.identity);
+                powerPoleInstance.GetComponent<SpriteRenderer>().enabled = true;
+                powerPoleInstance.transform.localScale = new Vector3(3f, 3f, 0f);
+                _gamePlay.powerPoleInstances.Add(powerPoleInstance);
+                _soundManager.PlaySound("PlacePole");
+                _powerPoles--;
+                powerPolesText.text = _powerPoles + "/" + maxPowerPoles;
             }
         }
         if (itemInHands == ItemInHands.PowerLine && 
@@ -97,6 +144,7 @@ public class PlayerContoller : MonoBehaviour
                     
                     _connectionStart = powerPoleIn.powerOutTransform;
                     _lineRenderer.enabled = true;
+                    _soundManager.PlaySound("Pop");
                     break;
                 }
             }
@@ -105,21 +153,35 @@ public class PlayerContoller : MonoBehaviour
         if (_connectionActive)
         {
             DrawTempConnection();
-            if(playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerEnd")) && timeSinceLastConnection > 1.0f && _powerPoleIn != null)
+            if(playerHitBox.IsTouchingLayers(LayerMask.GetMask("PowerEnd")) && _timeSinceLastConnection > 1.0f && _powerPoleIn != null)
             {
-                timeSinceLastConnection = 0;
+                _timeSinceLastConnection = 0;
                 CreatePermanentConnection(_powerPoleIn);
             }
             else
             {
-                timeSinceLastConnection += Time.deltaTime;
+                _timeSinceLastConnection += Time.deltaTime;
+            }
+        }
+        if(itemInHands == ItemInHands.Delete)
+        {
+            foreach (var powerPole in _gamePlay.powerPoleInstances)
+            {
+                if(Vector2.Distance(powerPole.transform.position, transform.position) < 1.0f)
+                {
+                    var powerPoleComponent = powerPole.GetComponent<PowerPole>();
+                    powerPoleComponent.isSelected = true;
+                    powerPoleComponent.timeSinceSelected = 0;
+                } else
+                {
+                    powerPole.GetComponent<PowerPole>().isSelected = false;
+                }
             }
         }
     }
 
     private void CreatePermanentConnection(GameObject powerPoleIn)
     {
-
         foreach (var powerStart in _gamePlay.powerPoleInstances)
         {
             PowerPole powerPole = powerStart.GetComponent<PowerPole>();
@@ -141,6 +203,7 @@ public class PlayerContoller : MonoBehaviour
                 _connectionActive = false;
                 _lineRenderer.enabled = false;
                 _gamePlay.CalculatePower();
+                _soundManager.PlaySound("Pop");
                 break;
             }
         }
@@ -152,9 +215,29 @@ public class PlayerContoller : MonoBehaviour
 
     private void DrawTempConnection()
      {
+         var distance = _connectionStart - (Vector2)transform.position;
         _lineRenderer.enabled = true;
         _lineRenderer.SetPosition(0, _connectionStart);
         _lineRenderer.SetPosition(1, transform.position);
+        if(distance.magnitude > maxConnectionDistance * 0.75f)
+        {
+            _lineRenderer.startColor = Color.red;
+            _lineRenderer.endColor = Color.red;
+        }
+        else if(distance.magnitude > maxConnectionDistance * 0.5f)
+        {
+            _lineRenderer.startColor = new Color(243/255f,119/255f,19/255f);
+            _lineRenderer.endColor = new Color(243/255f,119/255f,19/255f);
+        }
+        else
+        {
+            _lineRenderer.startColor = new Color(235/255f,213/255f,19/255f);
+            _lineRenderer.endColor = new Color(235/255f,213/255f,19/255f, 255);
+        }
+        if(distance.magnitude > maxConnectionDistance)
+        {
+            BreakConnection();
+        }
     }
 
     private void BreakConnection()
@@ -189,7 +272,8 @@ public class PlayerContoller : MonoBehaviour
     {
         None,
         PowerPole,
-        PowerLine
+        PowerLine,
+        Delete
     }
 }
 

@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.Serialization;
 
 public class PowerPole : MonoBehaviour
 {
@@ -18,9 +17,16 @@ public class PowerPole : MonoBehaviour
 
     [SerializeField] private Sprite powerOffSprite;
     [SerializeField] private Sprite powerOnSprite;
+    [SerializeField] private GameObject seletedGameObject;
+    
+    public bool isSelected  = false; 
 
     private SpriteRenderer _spriteRenderer;
     private Light2D _light2D;
+    
+    public float timeSinceSelected = 0;
+    
+    private SoundManager _soundManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -50,15 +56,28 @@ public class PowerPole : MonoBehaviour
             var collider = gameObject.GetComponent<BoxCollider2D>();
             powerInTransform = transform.position + new Vector3(collider.offset.x, collider.offset.y, 0);
         }
+        _soundManager = SoundManager.instance;
+        if (_soundManager == null)
+        {
+            Debug.LogError("No SoundManager found in scene");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(powerLineIn != null)
+        timeSinceSelected += Time.deltaTime;
+
+        if (!isStart && !isEnd )
         {
-            
+            if(timeSinceSelected > 1.0f)
+            {
+                isSelected = false;
+                seletedGameObject.SetActive(false);
+            }
+            seletedGameObject.SetActive(isSelected);
         }
+
         _light2D.enabled = hasPower;
         if(!isStart && !isEnd)
         {
