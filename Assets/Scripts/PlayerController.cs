@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class PlayerContoller : MonoBehaviour
@@ -94,7 +95,8 @@ public class PlayerContoller : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            //restart scene
+            var currentScene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(currentScene.name);
         }
         if(Input.GetKeyDown(KeyCode.E) && itemInHands == ItemInHands.Delete)
         {

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 public class GamePlay : MonoBehaviour
@@ -12,13 +14,16 @@ public class GamePlay : MonoBehaviour
 
     public GameObject powerStart;
     public GameObject powerEnd;
+    [SerializeField] private Light2D winningLight;
     
     public List<Scene> scenes; 
     
     private SoundManager _soundManager;
+    private bool _wonLevel = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        winningLight.intensity = 0;
         if(powerStart == null || powerEnd == null)
         {
             Debug.LogError("Power start or end not set");
@@ -34,6 +39,31 @@ public class GamePlay : MonoBehaviour
             Debug.LogError("No SoundManager found in scene");
         }
         
+    }
+    
+    // Update is called once per frame
+    void Update()
+    {
+        if (_wonLevel)
+        {
+            if (winningLight.intensity < 1)
+            {
+                winningLight.intensity += 0.01f;
+            }
+            else
+            {
+                //var currentScene = SceneManager.GetActiveScene();
+                //var currentSceneIndex = scenes.IndexOf(currentScene);
+                //if (currentSceneIndex == scenes.Count - 1)
+                //{
+                //   // SceneManager.LoadScene(scenes[0].name);
+                //}
+                //else
+                //{
+                //    //SceneManager.LoadScene(scenes[currentSceneIndex + 1].name);
+                //}
+            }
+        }
     }
 
     // ReSharper disable Unity.PerformanceAnalysis
@@ -122,6 +152,7 @@ public class GamePlay : MonoBehaviour
     
     private void LevelComplete()
     {
+        _wonLevel = true;
         _soundManager.PlaySound("Win");
         
     }
