@@ -201,7 +201,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasPower: 1
-  powerInTransform: {x: 0, y: 0, z: 0}
-  powerOutTransform: {x: 0, y: 0, z: 0}
+  powerInTransform: {x: 0, y: 0}
+  powerOutTransform: {x: 0, y: 0}
   isStart: 1
   isEnd: 0
+  powerLineIn: {fileID: 0}
+  powerLineOut: {fileID: 0}
+  powerOffSprite: {fileID: 0}
+  powerOnSprite: {fileID: 0}
+  seletedGameObject: {fileID: 0}
+  isSelected: 0
+  timeSinceSelected: 0

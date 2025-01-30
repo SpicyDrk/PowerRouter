@@ -16,7 +16,7 @@ public class GamePlay : MonoBehaviour
     public GameObject powerEnd;
     [SerializeField] private Light2D winningLight;
     
-    public List<Scene> scenes; 
+    [SerializeField] List<Scene> scenes; 
     
     private SoundManager _soundManager;
     private bool _wonLevel = false;
@@ -46,23 +46,11 @@ public class GamePlay : MonoBehaviour
     {
         if (_wonLevel)
         {
-            if (winningLight.intensity < 1)
+            if (winningLight.intensity < 0.6)
             {
-                winningLight.intensity += 0.01f;
+                winningLight.intensity += 0.02f;
             }
-            else
-            {
-                //var currentScene = SceneManager.GetActiveScene();
-                //var currentSceneIndex = scenes.IndexOf(currentScene);
-                //if (currentSceneIndex == scenes.Count - 1)
-                //{
-                //   // SceneManager.LoadScene(scenes[0].name);
-                //}
-                //else
-                //{
-                //    //SceneManager.LoadScene(scenes[currentSceneIndex + 1].name);
-                //}
-            }
+            
         }
     }
 

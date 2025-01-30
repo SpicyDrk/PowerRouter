@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -22,6 +23,7 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField] private BoxCollider2D playerHitBox; 
     [SerializeField] private GameObject powerLinePrefab;
     [SerializeField] private TMP_Text powerPolesText;
+    [SerializeField] private TMP_Text restartText;
     
     [SerializeField] private int maxPowerPoles = 4;
     private int _powerPoles;
@@ -246,6 +248,7 @@ public class PlayerContoller : MonoBehaviour
     {
         _connectionActive = false;
         _lineRenderer.enabled = false;
+        _soundManager.PlaySound("RopeBreak");
     }
     
     private void UpdateMovement()
@@ -269,6 +272,20 @@ public class PlayerContoller : MonoBehaviour
         {
             transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f);
         }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Pit"))
+        {
+            _soundManager.PlaySound("Death");
+            ShowRestartext();
+        }
+    }
+    
+    private void ShowRestartext()
+    {
+        restartText.GetComponent<TextMeshProUGUI>().enabled = true;
     }
     public enum ItemInHands
     {

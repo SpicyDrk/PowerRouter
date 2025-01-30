@@ -50,8 +50,10 @@ MonoBehaviour:
   start: {x: 0, y: 0}
   end: {x: 0, y: 0}
   hingePrefab: {fileID: 4008857424734023435, guid: 2556ae5a368b4414d9061fdad6e856fd, type: 3}
-  _rigidbodies: []
   segments: []
+  hasPower: 0
+  powerPoleIn: {fileID: 0}
+  powerPoleOut: {fileID: 0}
   ropeCreated: 0
 --- !u!114 &4485818668830488870
 MonoBehaviour:
@@ -109,7 +111,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 6
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}

@@ -216,6 +216,7 @@ MonoBehaviour:
   powerOnSprite: {fileID: -8169174113232897249, guid: 4788f81355f054842a0389933ba483e1, type: 3}
   seletedGameObject: {fileID: 9152026023009792489}
   isSelected: 0
+  timeSinceSelected: 0
 --- !u!212 &2286312242941094039
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -259,7 +260,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_Sprite: {fileID: 3515355908722649637, guid: a15a0b8f01c3ddc42a0cd721b040e7ca, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -425,7 +426,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: X To Delete
+  m_text: 'E '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
@@ -447,7 +448,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
+  m_TextStyleHashCode: 93368250
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -490,7 +491,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0.31422898, y: 0.111044645, z: 18.937365, w: 4.761095}
+  m_margin: {x: 0.31422898, y: 0.1402142, z: 17.303421, w: 4.761095}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
