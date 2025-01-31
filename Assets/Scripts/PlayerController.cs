@@ -24,6 +24,7 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField] private GameObject powerLinePrefab;
     [SerializeField] private TMP_Text powerPolesText;
     [SerializeField] private TMP_Text restartText;
+    [SerializeField] private LevelLoader _levelLoader;
     
     [SerializeField] private int maxPowerPoles = 4;
     private int _powerPoles;
@@ -50,6 +51,7 @@ public class PlayerContoller : MonoBehaviour
         _lineRenderer.enabled = false;
         _rigidbody = GetComponent<Rigidbody2D>();
         _soundManager = SoundManager.instance;
+        _levelLoader = gamePlay.GetComponent<LevelLoader>();
         if (_soundManager == null)
         {
             Debug.LogError("No SoundManager found in scene");
@@ -97,8 +99,7 @@ public class PlayerContoller : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            var currentScene = SceneManager.GetActiveScene();
-            SceneManager.LoadScene(currentScene.name);
+            _levelLoader.LoadLevel(SceneManager.GetActiveScene().buildIndex);
         }
         if(Input.GetKeyDown(KeyCode.E) && itemInHands == ItemInHands.Delete)
         {
@@ -213,7 +214,7 @@ public class PlayerContoller : MonoBehaviour
         }
         if(_connectionActive)
         {
-            BreakConnection();
+            //BreakConnection();
         }
     }
 
@@ -279,11 +280,11 @@ public class PlayerContoller : MonoBehaviour
         if (other.gameObject.CompareTag("Pit"))
         {
             _soundManager.PlaySound("Death");
-            ShowRestartext();
+            ShowRestartText();
         }
     }
     
-    private void ShowRestartext()
+    private void ShowRestartText()
     {
         restartText.GetComponent<TextMeshProUGUI>().enabled = true;
     }

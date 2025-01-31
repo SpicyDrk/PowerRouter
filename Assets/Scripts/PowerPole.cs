@@ -1,5 +1,7 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Serialization;
 
 public class PowerPole : MonoBehaviour
 {
@@ -17,7 +19,9 @@ public class PowerPole : MonoBehaviour
 
     [SerializeField] private Sprite powerOffSprite;
     [SerializeField] private Sprite powerOnSprite;
-    [SerializeField] private GameObject seletedGameObject;
+    [FormerlySerializedAs("seletedGameObject")] [SerializeField] private GameObject selectedGameObject;
+    [SerializeField] private PowerPoleType powerPoleType  = PowerPoleType.Normal;
+    [SerializeField] private GameObject ActivatedObject;
     
     public bool isSelected  = false; 
 
@@ -70,20 +74,35 @@ public class PowerPole : MonoBehaviour
     {
         timeSinceSelected += Time.deltaTime;
 
-        if (!isStart && !isEnd )
+        if (!isStart && !isEnd  && powerPoleType == PowerPoleType.Normal)
         {
             if(timeSinceSelected > 1.0f)
             {
                 isSelected = false;
-                seletedGameObject.SetActive(false);
+                selectedGameObject.SetActive(false);
             }
-            seletedGameObject.SetActive(isSelected);
+            selectedGameObject.SetActive(isSelected);
         }
 
         _light2D.enabled = hasPower;
-        if(!isStart && !isEnd)
+        if(!isStart && !isEnd && powerPoleType == PowerPoleType.Normal)
         {
             _spriteRenderer.sprite = hasPower ? powerOnSprite : powerOffSprite;
         }
+
+        if (powerPoleType == PowerPoleType.GateSwitch && hasPower)
+        {
+            ActivatedObject.GetComponent<Gate>().powered = true;
+        }
     }
+    
+}
+
+public enum PowerPoleType
+{
+    Normal,
+    Start,
+    End,
+    GateSwitch,
+    ElevatorSwitch
 }

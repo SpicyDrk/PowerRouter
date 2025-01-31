@@ -20,9 +20,11 @@ public class GamePlay : MonoBehaviour
     
     private SoundManager _soundManager;
     private bool _wonLevel = false;
+    private LevelLoader _levelLoader;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _levelLoader = GetComponent<LevelLoader>();
         winningLight.intensity = 0;
         if(powerStart == null || powerEnd == null)
         {
@@ -38,6 +40,15 @@ public class GamePlay : MonoBehaviour
         {
             Debug.LogError("No SoundManager found in scene");
         }
+        //loop over this scene and get all objects named "PowerSwitch"
+        foreach (var gameObject in SceneManager.GetActiveScene().GetRootGameObjects())
+        {
+            if (gameObject.name == "PowerSwitch")
+            {
+                powerPoleInstances.Add(gameObject);
+            }
+        }
+        
         
     }
     
@@ -142,6 +153,7 @@ public class GamePlay : MonoBehaviour
     {
         _wonLevel = true;
         _soundManager.PlaySound("Win");
+        _levelLoader.LoadLevel();
         
     }
 }
