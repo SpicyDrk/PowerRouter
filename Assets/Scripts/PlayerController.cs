@@ -126,7 +126,8 @@ public class PlayerContoller : MonoBehaviour
             {
                 var powerPoleInstance = Instantiate(powerPolePrefab, transform.position + new Vector3(0,0.4f,0), Quaternion.identity);
                 powerPoleInstance.GetComponent<SpriteRenderer>().enabled = true;
-                powerPoleInstance.transform.localScale = new Vector3(3f, 3f, 0f);
+                var direction = transform.localScale.x > 0 ? 1 : -1; 
+                powerPoleInstance.transform.localScale = new Vector3(3f * direction, 3f, 0f);
                 _gamePlay.powerPoleInstances.Add(powerPoleInstance);
                 _soundManager.PlaySound("PlacePole");
                 _powerPoles--;

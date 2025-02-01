@@ -87,3 +87,10 @@ MonoBehaviour:
     pitch: 1
     volumeRandomness: 0.027
     pitchRandomness: 0.152
+  - name: RocksSliding
+    clip: {fileID: 8300000, guid: bef79629e7821e94d8bf5b1d42e6926e, type: 3}
+    volume: 0.333
+    loop: 0
+    pitch: 1
+    volumeRandomness: 0.027
+    pitchRandomness: 0.152

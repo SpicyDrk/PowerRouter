@@ -406,6 +406,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b036fd26317a8ad41b1892b3ded48c40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gate: {fileID: 5692265669145410947}
   openDistance: 4
   powered: 0

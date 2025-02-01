@@ -136,15 +136,15 @@ TextureImporter:
         width: 1052
         height: 4032
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 19d6618e18e000c48a4782e189b65d9f
-      internalID: 1265595564
+      spriteID: 2e4161221f8c01d418e75935ef62fbca
+      internalID: -1805199800
       vertices: []
       indices: 
       edges: []
@@ -158,15 +158,15 @@ TextureImporter:
         width: 1040
         height: 2350
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 75dd3292f610e5e4f8901354dc153dbb
-      internalID: -1825453134
+      spriteID: 885b6236bf262c940afb81d1310eff44
+      internalID: -1915216264
       vertices: []
       indices: 
       edges: []
@@ -180,15 +180,15 @@ TextureImporter:
         width: 1090
         height: 1006
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c6c0dae1f328cf3448b671ec3641f723
-      internalID: -1166444316
+      spriteID: e40ae1355e295524389b1e1aaec62e43
+      internalID: -361954162
       vertices: []
       indices: 
       edges: []
@@ -197,20 +197,20 @@ TextureImporter:
       name: Mossy - BackgroundDecoration_3
       rect:
         serializedVersion: 2
-        x: 2391
+        x: 2381
         y: 1773
         width: 1686
         height: 914
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c1d933be31de24c4a8585a2044319fa7
-      internalID: 1605637345
+      spriteID: 744d44918c14f104ea2273a2346dadc5
+      internalID: -1410552058
       vertices: []
       indices: 
       edges: []
@@ -224,15 +224,15 @@ TextureImporter:
         width: 926
         height: 648
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d795694e2ac58034d8e59a993ed8a742
-      internalID: -1386787223
+      spriteID: 9d13f5deb8aadec40816b14db899c29b
+      internalID: 1279052085
       vertices: []
       indices: 
       edges: []
@@ -246,15 +246,15 @@ TextureImporter:
         width: 1690
         height: 1730
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 75a72ff46c717774084b80f5e37f1dcd
-      internalID: 1613179403
+      spriteID: 6d69292c3a0a8a2498ca1c2306c4842f
+      internalID: 58802800
       vertices: []
       indices: 
       edges: []
@@ -263,7 +263,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: c193e593b9e979649a73a9f24d6ba99e
+    spriteID: 5db376f0680206e40934907fc93aebed
     internalID: 0
     vertices: []
     indices: 
@@ -273,12 +273,12 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Mossy - BackgroundDecoration_0: 1265595564
-      Mossy - BackgroundDecoration_1: -1825453134
-      Mossy - BackgroundDecoration_2: -1166444316
-      Mossy - BackgroundDecoration_3: 1605637345
-      Mossy - BackgroundDecoration_4: -1386787223
-      Mossy - BackgroundDecoration_5: 1613179403
+      Mossy - BackgroundDecoration_0: -1805199800
+      Mossy - BackgroundDecoration_1: -1915216264
+      Mossy - BackgroundDecoration_2: -361954162
+      Mossy - BackgroundDecoration_3: -1410552058
+      Mossy - BackgroundDecoration_4: 1279052085
+      Mossy - BackgroundDecoration_5: 58802800
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

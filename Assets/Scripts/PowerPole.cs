@@ -23,6 +23,8 @@ public class PowerPole : MonoBehaviour
     [SerializeField] private PowerPoleType powerPoleType  = PowerPoleType.Normal;
     [SerializeField] private GameObject ActivatedObject;
     
+    private GameObject SelectedObject;
+    
     public bool isSelected  = false; 
 
     private SpriteRenderer _spriteRenderer;
@@ -34,6 +36,8 @@ public class PowerPole : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        
+        //find child named select
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _light2D = GetComponent<Light2D>();
         var children = gameObject.GetComponentsInChildren<Transform>();
@@ -46,6 +50,10 @@ public class PowerPole : MonoBehaviour
             if (child.name == "PowerOut")
             {
                 powerOutTransform = child.position;
+            }
+            if (child.name == "Select")
+            {
+                selectedGameObject = child.gameObject;
             }
         }
         if (isStart)
@@ -82,6 +90,7 @@ public class PowerPole : MonoBehaviour
                 selectedGameObject.SetActive(false);
             }
             selectedGameObject.SetActive(isSelected);
+            selectedGameObject.GetComponent<SpriteRenderer>().enabled = isSelected;
         }
 
         _light2D.enabled = hasPower;

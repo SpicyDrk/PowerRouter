@@ -7,6 +7,7 @@ TagManager:
   - PowerStart
   - PowerEnd
   - Pit
+  - music
   layers:
   - Default
   - TransparentFX
