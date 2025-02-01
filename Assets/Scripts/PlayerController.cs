@@ -45,7 +45,7 @@ public class PlayerContoller : MonoBehaviour
     void Start()
     {
         _powerPoles = maxPowerPoles;
-        powerPolesText.text = _powerPoles+"/" + maxPowerPoles;
+
         _gamePlay = gamePlay.GetComponent<GamePlay>();
         _lineRenderer = GetComponent<LineRenderer>();
         _lineRenderer.enabled = false;
@@ -56,10 +56,27 @@ public class PlayerContoller : MonoBehaviour
         {
             Debug.LogError("No SoundManager found in scene");
         }
+        //find object named powerPolesText
+        
+        GameObject powerPolesTextObject = GameObject.Find("PolesLeft");
+        if (powerPolesTextObject != null)
+        {
+            powerPolesText = powerPolesTextObject.GetComponent<TMP_Text>();
+            if (powerPolesText == null)
+            {
+                Debug.LogError("No TMP_Text component found on powerPolesText GameObject");
+            }
+        }
+        else
+        {
+            Debug.LogError("No GameObject named powerPolesText found in scene");
+        }
+        powerPolesText.text = _powerPoles+"/" + maxPowerPoles;
     }
 
     // Update is called once per frame
     void Update()
+    
     {
         UpdateMovement();
         UpdateCommands();
