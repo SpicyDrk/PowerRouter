@@ -30,10 +30,19 @@ public class Gate : MonoBehaviour
                 _soundManager.PlaySound("RocksSliding");
                 isOpened = true;
             }
-            //move this object up by 0.1f every frame until openDistance is reached
-            if (transform.position.y < openDistance)
+            if(openDistance < 0)
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y + 0.005f, transform.position.z);
+                if (transform.position.y > -openDistance)
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y - 0.005f, transform.position.z);
+                }
+            }
+            else
+            {
+                if (transform.position.y < openDistance)
+                {
+                    transform.position = new Vector3(transform.position.x, transform.position.y + 0.005f, transform.position.z);
+                }
             }
         }
     }

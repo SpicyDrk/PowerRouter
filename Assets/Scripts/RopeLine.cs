@@ -3,7 +3,7 @@ using UnityEngine.Serialization;
 
 public class RopeLine : MonoBehaviour
 {
-    private RopeCreator _ropeCreator;
+    public RopeCreator _ropeCreator;
     private LineRenderer _lineRenderer;
     
     void Start()

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
-    [SerializeField] private bool playingMusic = true;
+    //[SerializeField] private bool playingMusic = true;
     void Awake()
     {
         GameObject[] objs = GameObject.FindGameObjectsWithTag("music");

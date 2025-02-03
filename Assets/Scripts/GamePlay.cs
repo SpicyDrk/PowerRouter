@@ -21,9 +21,14 @@ public class GamePlay : MonoBehaviour
     private SoundManager _soundManager;
     private bool _wonLevel = false;
     private LevelLoader _levelLoader;
+
+    private List<Transform> allPowerLineSegments = new();
+    private Camera _camera;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _camera = Camera.main;
         _levelLoader = GetComponent<LevelLoader>();
         winningLight.intensity = 0;
         if(powerStart == null || powerEnd == null)
@@ -43,7 +48,7 @@ public class GamePlay : MonoBehaviour
         //loop over this scene and get all objects named "PowerSwitch"
         foreach (var gameObject in SceneManager.GetActiveScene().GetRootGameObjects())
         {
-            if (gameObject.name == "PowerSwitch")
+            if (gameObject.name.Contains("PowerSwitch"))
             {
                 powerPoleInstances.Add(gameObject);
             }
@@ -61,10 +66,13 @@ public class GamePlay : MonoBehaviour
             {
                 winningLight.intensity += 0.02f;
             }
-            
+            if(allPowerLineSegments.Count == 0)
+            {
+                _levelLoader.LoadLevel();
+            }
         }
     }
-
+    
     // ReSharper disable Unity.PerformanceAnalysis
     public void CalculatePower()
     {
@@ -154,7 +162,6 @@ public class GamePlay : MonoBehaviour
         _wonLevel = true;
         _soundManager.PlaySound("Win");
         _levelLoader.LoadLevel();
-        
     }
 }
 
